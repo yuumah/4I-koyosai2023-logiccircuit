@@ -475,10 +475,6 @@
     [
       "66a67db1-3bf5-4715-84b7-04fd3724d3ba",
       "cross_led"
-    ],
-    [
-      "6be709b3-cd99-416b-bf6e-292af8390d4e",
-      "logic_block"
     ]
   ],
   "text_variables": {}
