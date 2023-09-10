@@ -1,4 +1,4 @@
-21571101400703079
+21572795721038189
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -60726,6 +60726,13 @@ Connector
 1
 LIB
 Pogopin_pad
+
+
+0
+1
+1
+LIB
+bridge
 
 
 0
