@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour
         maininput=new MainInput();
         
         maininput.Enable();
-        String txtmap="#*#*#\n*#*#*\n#*#*#\n*#*#*\n#*#*#####";
+        String txtmap="++\nN#\nO#\n++\n#N";
         String[] map=txtmap.Split("\n");
         column=map.Length;
         for(int i=0;i<column;i++){
@@ -65,15 +66,16 @@ public class GameManager : MonoBehaviour
                     id=map[column-i-1][j];
                 }
                 Block b=findBlock(id);
-                GameObject gameObject=Instantiate(b.gameObject,pos,this.transform.rotation,this.transform);
+                int r=b.getOffset();
+                GameObject gameObject=Instantiate(b.gameObject,pos,Quaternion.Euler(0f,0f,r*90),this.transform);
                 Board[i,j]=gameObject;
             }
         }
 
         currentpos=new Vector2(0,0);
         currentposint=new Vector2Int(0,0);
-    }
 
+    }
     void Update()
     {
         Vector2 vec=maininput.Player.Move.ReadValue<Vector2>();
@@ -85,9 +87,15 @@ public class GameManager : MonoBehaviour
             currentpos=currentposint;
         }
 
-        if(0.5<=maininput.Player.Select.ReadValue<float>()){
-            Destroy(Board[currentposint.y,currentposint.x]);
-        }
+        UpdateCircuit();
+    }
+
+    public void OnPress(InputAction.CallbackContext context)
+    {
+        // 押された瞬間でPerformedとなる
+        if (!context.performed) return;
+
+        Debug.Log("Press");
     }
 
 
@@ -113,5 +121,33 @@ public class GameManager : MonoBehaviour
 
     public Vector2Int getCurrentPos(){
         return currentposint;
+    }
+
+    Vector2Int[] way={
+        new Vector2Int(1,0),
+        new Vector2Int(0,1),
+        new Vector2Int(-1,0),
+        new Vector2Int(0,-1)
+    };
+    void UpdateCircuit(){
+        for(int i=0;i<column;i++){
+            for(int j=0;j<maxrow;j++){
+                Block b=Board[i,j].GetComponent<Block>();
+                for(int p=0;p<4;p++){
+                    Vector2Int v=way[p];
+
+                    if(b.GPIO[p].getPintype()==Block.PINTYPE.INPUT||b.GPIO[p].getPintype()==Block.PINTYPE.PASSIVE){
+                        if((0<=i+v.x&&i+v.x<column)&&(0<=j+v.y&&j+v.y<maxrow)){
+                            Block next=Board[i+v.x,j+v.y].GetComponent<Block>();
+                            next.Update();
+                            int nextpin=(p+2)%4;
+                            if(next.GPIO[nextpin].getPintype()==Block.PINTYPE.OUTPUT||next.GPIO[nextpin].getPintype()==Block.PINTYPE.PASSIVE){
+                                b.GPIO[p].Power=Math.Max(next.GPIO[nextpin].Power-1,0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

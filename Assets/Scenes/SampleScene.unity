@@ -323,6 +323,9 @@ MonoBehaviour:
   Blocks:
   - {fileID: 7881981592879961671, guid: 56ff29764a70e454789015626c5a2cd3, type: 3}
   - {fileID: 7230773750171390170, guid: 2df59f5ae32d2684e8804c42e72041c1, type: 3}
+  - {fileID: 4527614082732086742, guid: b4f03999a239b9148a876432490fa897, type: 3}
+  - {fileID: 8462166680104623380, guid: c26c03bf1554a8144a83f5267f1e3c1b, type: 3}
+  - {fileID: 8382529832451197951, guid: 22734058b0be6f446a614fc06bb66259, type: 3}
   FallBack: {fileID: 7881981592879961671, guid: 56ff29764a70e454789015626c5a2cd3, type: 3}
   currentposint: {x: 0, y: 0}
   Select: {fileID: 396655166}

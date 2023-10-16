@@ -98,3 +98,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Identity: 42
+  Type: 0
+  N:
+    E: 0
+  E:
+    E: 0
+  W:
+    E: 0
+  S:
+    E: 0
