@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     public GameObject[,] Board;
     public Camera MainCam;
 
+    [SerializeField]
+    private InputActionReference _press;
+
 
     private Block findBlock(char Identity){
         for(int i=0;i<Blocks.Length;i++){
@@ -39,6 +42,8 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
+        _press.action.performed-=OnPress;
+        _press.action.Disable();
         maininput.Dispose();
     }
     void Start()
@@ -46,7 +51,7 @@ public class GameManager : MonoBehaviour
         maininput=new MainInput();
         
         maininput.Enable();
-        String txtmap="++\nN#\nO#\n++\n#N";
+        String txtmap="++++++++++\n+#########\n+#++++++++\n+#+######+\n+#+#++++#+\n+#+####+#+\n+#++++++#+\n+########+\n++++++++++";
         String[] map=txtmap.Split("\n");
         column=map.Length;
         for(int i=0;i<column;i++){
@@ -74,6 +79,9 @@ public class GameManager : MonoBehaviour
 
         currentpos=new Vector2(0,0);
         currentposint=new Vector2Int(0,0);
+
+        _press.action.performed+=OnPress;
+        _press.action.Enable();
 
     }
     void Update()
@@ -139,7 +147,7 @@ public class GameManager : MonoBehaviour
                     if(b.GPIO[p].getPintype()==Block.PINTYPE.INPUT||b.GPIO[p].getPintype()==Block.PINTYPE.PASSIVE){
                         if((0<=i+v.x&&i+v.x<column)&&(0<=j+v.y&&j+v.y<maxrow)){
                             Block next=Board[i+v.x,j+v.y].GetComponent<Block>();
-                            next.Update();
+                            next.UpdateState();
                             int nextpin=(p+2)%4;
                             if(next.GPIO[nextpin].getPintype()==Block.PINTYPE.OUTPUT||next.GPIO[nextpin].getPintype()==Block.PINTYPE.PASSIVE){
                                 b.GPIO[p].Power=Math.Max(next.GPIO[nextpin].Power-1,0);

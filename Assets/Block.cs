@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    public const int MAX_POWER=64;
+    public const int MAX_POWER=1024;
     public enum PINTYPE{
         PASSIVE,
         INPUT,
@@ -31,9 +31,7 @@ public class Block : MonoBehaviour
         public void Update()
         {
             if(T==PINTYPE.PASSIVE||T==PINTYPE.INPUT){
-                if(0<Power){
-                    Power--;
-                }
+                Power=Math.Max(0,Power-32);
             }
             else if(T==PINTYPE.NAN){
                 Power=0;
@@ -82,11 +80,14 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void Update()
-    {
+    void Update(){
         for(int i=0;i<4;i++){
             GPIO[i].Update();
         }
+        UpdateState();
+    }
+    public void UpdateState()
+    {
         if(Type==TYPE.OR){
             if(
                 0<GPIO[(1+offset)%4].Power||
