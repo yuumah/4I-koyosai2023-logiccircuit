@@ -98,14 +98,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Identity: 35
-  Type: 2
+  Type: 4
   GPIO:
-  - E: 0
+  - Power: 0
     T: 3
-  - E: 0
+  - Power: 0
     T: 3
-  - E: 0
+  - Power: 0
     T: 3
-  - E: 0
+  - Power: 0
     T: 3
   offset: 0

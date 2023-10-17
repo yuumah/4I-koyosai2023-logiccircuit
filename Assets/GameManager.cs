@@ -156,14 +156,21 @@ public class GameManager : MonoBehaviour
                     if(b.GPIO[p].getPintype()==Block.PINTYPE.INPUT||b.GPIO[p].getPintype()==Block.PINTYPE.PASSIVE){
                         if((0<=i+v.x&&i+v.x<column)&&(0<=j+v.y&&j+v.y<maxrow)){
                             Block next=Board[i+v.x,j+v.y].GetComponent<Block>();
-                            next.UpdateState();
+                            //next.UpdateState();
                             int nextpin=(p+2)%4;
                             if(next.GPIO[nextpin].getPintype()==Block.PINTYPE.OUTPUT||next.GPIO[nextpin].getPintype()==Block.PINTYPE.PASSIVE){
                                 b.GPIO[p].Power=Math.Max(next.GPIO[nextpin].Power-1,0);
                             }
+                            else{
+                                b.GPIO[p].Power=0;
+                            }
+                        }
+                        else{
+                            b.GPIO[p].Power=0;
                         }
                     }
                 }
+                b.UpdateState();
             }
         }
     }
