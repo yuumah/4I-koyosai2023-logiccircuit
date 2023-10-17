@@ -331,6 +331,7 @@ MonoBehaviour:
   Select: {fileID: 396655166}
   MainCam: {fileID: 519420031}
   _press: {fileID: -6374780797893820837, guid: f3a13e99fc7559f46b8d527586007b97, type: 3}
+  _impact_move: {fileID: -5507105546309783091, guid: f3a13e99fc7559f46b8d527586007b97, type: 3}
 --- !u!4 &706343719
 Transform:
   m_ObjectHideFlags: 0

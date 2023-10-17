@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public Camera MainCam;
 
     [SerializeField]
-    private InputActionReference _press;
+    private InputActionReference _press,_impact_move;
 
 
     private Block findBlock(char Identity){
@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour
     {
         _press.action.performed-=OnPress;
         _press.action.Disable();
+        _impact_move.action.performed-=Impact_move;
+        _impact_move.action.Disable();
         maininput.Dispose();
     }
     void Start()
@@ -51,7 +53,7 @@ public class GameManager : MonoBehaviour
         maininput=new MainInput();
         
         maininput.Enable();
-        String txtmap="++++++++++\n+#########\n+#++++++++\n+#+######+\n+#+#++++#+\n+#+####+#+\n+#++++++#+\n+########+\n++++++++++";
+        String txtmap="++++++++++\nN#########\n+#++++++++\n+#+######+\n+#+#++++#+\n+#+####+#+\n+#++++++#+\n+########+\n++++++++++";
         String[] map=txtmap.Split("\n");
         column=map.Length;
         for(int i=0;i<column;i++){
@@ -82,6 +84,8 @@ public class GameManager : MonoBehaviour
 
         _press.action.performed+=OnPress;
         _press.action.Enable();
+        _impact_move.action.performed+=Impact_move;
+        _impact_move.action.Enable();
 
     }
     void Update()
@@ -104,6 +108,11 @@ public class GameManager : MonoBehaviour
         if (!context.performed) return;
 
         Debug.Log("Press");
+    }
+    public void Impact_move(InputAction.CallbackContext context){
+        if(context.performed){
+            Move(maininput.Player.Move.ReadValue<Vector2>()*100);
+        }
     }
 
 
