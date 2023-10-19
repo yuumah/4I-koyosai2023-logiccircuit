@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -19,7 +17,8 @@ public class Block : MonoBehaviour
         AND,
         WIRE,
         NOT,
-        SOURCE
+        SOURCE,
+        XOR
     }
 
     [System.Serializable]
@@ -57,8 +56,11 @@ public class Block : MonoBehaviour
         return offset;
     }
 
-    void Start()
+    public void Init()
     {
+        for(int i=0;i<4;i++){
+            GPIO[i].Power=0;
+        }
         if(Type==TYPE.OR){
             GPIO[(0+offset)%4].T=PINTYPE.OUTPUT;
             GPIO[(1+offset)%4].T=PINTYPE.INPUT;
@@ -74,6 +76,19 @@ public class Block : MonoBehaviour
         else if(Type==TYPE.WIRE){
             ani=this.GetComponent<Animator>();
         }
+        else if(Type==TYPE.AND){
+            GPIO[(0+offset)%4].T=PINTYPE.OUTPUT;
+            GPIO[(1+offset)%4].T=PINTYPE.INPUT;
+            GPIO[(2+offset)%4].T=PINTYPE.NAN;
+            GPIO[(3+offset)%4].T=PINTYPE.INPUT;
+        }
+        else if(Type==TYPE.XOR){
+            GPIO[(0+offset)%4].T=PINTYPE.OUTPUT;
+            GPIO[(1+offset)%4].T=PINTYPE.INPUT;
+            GPIO[(2+offset)%4].T=PINTYPE.NAN;
+            GPIO[(3+offset)%4].T=PINTYPE.INPUT;
+        }
+        UpdateState();
     }
 
     public void UpdateState()
@@ -111,6 +126,28 @@ public class Block : MonoBehaviour
             }
             else{
                 ani.SetBool("ON",false);
+            }
+        }
+        else if(Type==TYPE.AND){
+            if(
+                0<GPIO[(1+offset)%4].Power&&
+                0<GPIO[(3+offset)%4].Power
+            ){
+                GPIO[(0+offset)%4].Power=MAX_POWER;
+            }
+            else{
+                GPIO[(0+offset)%4].Power=0;
+            }
+        }
+        else if(Type==TYPE.XOR){
+            if(
+                0<GPIO[(1+offset)%4].Power!=
+                0<GPIO[(3+offset)%4].Power
+            ){
+                GPIO[(0+offset)%4].Power=MAX_POWER;
+            }
+            else{
+                GPIO[(0+offset)%4].Power=0;
             }
         }
 

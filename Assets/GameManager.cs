@@ -1,9 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -53,7 +48,7 @@ public class GameManager : MonoBehaviour
         maininput=new MainInput();
         
         maininput.Enable();
-        String txtmap="++++++++++\nN#########\n+#++++++++\n+#+######+\n+#+#++++#+\n+#+####+#+\n+#++++++#+\n+########+\n++++++++++";
+        String txtmap="#+#\n#+#\n#+#\n+O+\n#+#";
         String[] map=txtmap.Split("\n");
         column=map.Length;
         for(int i=0;i<column;i++){
@@ -74,8 +69,9 @@ public class GameManager : MonoBehaviour
                 }
                 Block b=findBlock(id);
                 int r=b.getOffset();
-                GameObject gameObject=Instantiate(b.gameObject,pos,Quaternion.Euler(0f,0f,r*90),this.transform);
+                GameObject gameObject=Instantiate(b.gameObject,pos,Quaternion.Euler(0f,0f,-r*90),this.transform);
                 Board[i,j]=gameObject;
+                gameObject.GetComponent<Block>().Init();
             }
         }
 
@@ -93,7 +89,7 @@ public class GameManager : MonoBehaviour
         Vector2 vec=maininput.Player.Move.ReadValue<Vector2>();
         float size=vec.x*vec.x+vec.y*vec.y;
         if(0<size){
-            Move(vec);
+            Move(vec,0.005f);
         }
         else{
             currentpos=currentposint;
@@ -111,14 +107,14 @@ public class GameManager : MonoBehaviour
     }
     public void Impact_move(InputAction.CallbackContext context){
         if(context.performed){
-            Move(maininput.Player.Move.ReadValue<Vector2>()*100);
+            Move(maininput.Player.Move.ReadValue<Vector2>(),0.5f);
         }
     }
 
 
-    private void Move(Vector2 vec)
+    private void Move(Vector2 vec,float amp)
     {
-        currentpos+=vec*0.01f;
+        currentpos+=vec*amp;
         if(Math.Round(currentpos.x)<0){
             currentpos.x=0;
         }
