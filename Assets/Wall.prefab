@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Identity: 35
-  Type: 4
+  Type: 0
   GPIO:
   - Power: 0
     T: 3
@@ -108,4 +108,3 @@ MonoBehaviour:
     T: 3
   - Power: 0
     T: 3
-  offset: 0

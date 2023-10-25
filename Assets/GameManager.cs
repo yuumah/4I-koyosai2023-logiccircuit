@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -48,12 +49,19 @@ public class GameManager : MonoBehaviour
         maininput=new MainInput();
         
         maininput.Enable();
-        String txtmap="#+#\n#+#\n#+#\n+O+\n#+#";
+        String txtmap="#I#\nI1*I1";
+        //String txtmap="L1I1I1L2L1I1T0L2L1L2#1T0T0I1L2\nI0#1I1T1#1L1L3L0L3L0L2#1I0#1I0\nT3I1L2L0L2T3L2#1T0L2I0L1L3I0I0\nL0#1I0#1I0I0L0L2I0L0L3L0L2L0T1\nL1I1L3I0I0T3#1N0L0L2L1L2T3L2#1\nN0L1L2T3L3#1L1L3#1L0L3I0#1L0L2\nI0I0L0L3L1L2I0#1T3T0#1L0L2L1T1\n#1L0I1I1L3L0L3L0L3L0I1I1T2L3#1";
         String[] map=txtmap.Split("\n");
         column=map.Length;
         for(int i=0;i<column;i++){
-            if(maxrow<map[i].Length){
-                maxrow=map[i].Length;
+            int row=0;
+            for(int j=0;j<map[i].Length;j++){
+                if(map[i][j]<'0'||'3'<map[i][j]){
+                    row++;
+                }
+            }
+            if(maxrow<row){
+                maxrow=row;
             }
         }
         Board=new GameObject[column,maxrow];
@@ -61,17 +69,27 @@ public class GameManager : MonoBehaviour
         MainCam.orthographicSize=((float)column)/2;
 
         for(int i=0;i<column;i++){
+            int offset=0;
             for(int j=0;j<maxrow;j++){
                 Vector3 pos=new Vector3(j,i)+this.transform.position;
                 char id='$';
-                if(j<map[column-i-1].Length){
-                    id=map[column-i-1][j];
+                int r=0;
+                if(j+offset<map[column-i-1].Length){
+                    id=map[column-i-1][j+offset];
+                    if(j+offset+1<map[column-i-1].Length){
+                        char c=map[column-i-1][j+offset+1];
+                        if('0'<=c&&c<='3'){
+                            r=c-'0';
+                            offset++;
+                        }
+                    }
                 }
                 Block b=findBlock(id);
-                int r=b.getOffset();
                 GameObject gameObject=Instantiate(b.gameObject,pos,Quaternion.Euler(0f,0f,-r*90),this.transform);
                 Board[i,j]=gameObject;
-                gameObject.GetComponent<Block>().Init();
+                Block B=gameObject.GetComponent<Block>();
+                B.setOffset(r);
+                B.Init();
             }
         }
 
@@ -89,7 +107,7 @@ public class GameManager : MonoBehaviour
         Vector2 vec=maininput.Player.Move.ReadValue<Vector2>();
         float size=vec.x*vec.x+vec.y*vec.y;
         if(0<size){
-            Move(vec,0.005f);
+            Move(vec,Time.deltaTime*4);
         }
         else{
             currentpos=currentposint;
@@ -103,7 +121,12 @@ public class GameManager : MonoBehaviour
         // 押された瞬間でPerformedとなる
         if (!context.performed) return;
 
-        Debug.Log("Press");
+        Block b=Board[currentposint.y,currentposint.x].GetComponent<Block>();
+        Debug.Log(b.getType());
+        if(b.getType()==Block.TYPE.SOCKET){
+            Socket s=b.GetComponent<Socket>();
+            s.Turn();
+        }
     }
     public void Impact_move(InputAction.CallbackContext context){
         if(context.performed){

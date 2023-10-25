@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    public const int MAX_POWER=256;
+    public const int MAX_POWER=128;
 
     private Animator ani;
     public enum PINTYPE{
@@ -13,12 +13,14 @@ public class Block : MonoBehaviour
         NAN
     }
     public enum TYPE{
+        NONE,
         OR,
         AND,
         WIRE,
         NOT,
         SOURCE,
-        XOR
+        XOR,
+        SOCKET
     }
 
     [System.Serializable]
@@ -37,9 +39,9 @@ public class Block : MonoBehaviour
         }
     }
     [SerializeField]
-    private char Identity;
+    protected char Identity;
     [SerializeField]
-    private TYPE Type;
+    protected TYPE Type;
     public TYPE getType(){
         return Type;
     }
@@ -49,15 +51,17 @@ public class Block : MonoBehaviour
     public char getIdentity(){
         return this.Identity;
     }
-
     [SerializeField]
     private int offset=0;
-    public int getOffset(){
-        return offset;
+    public void setOffset(int offset){
+        this.offset=offset;
     }
 
     public void Init()
     {
+        if(Type!=TYPE.NONE){
+            ani=this.GetComponent<Animator>();
+        }
         for(int i=0;i<4;i++){
             GPIO[i].Power=0;
         }
@@ -74,7 +78,13 @@ public class Block : MonoBehaviour
             GPIO[(3+offset)%4].T=PINTYPE.NAN;
         }
         else if(Type==TYPE.WIRE){
-            ani=this.GetComponent<Animator>();
+            PINTYPE[] ps=new PINTYPE[4];
+            for(int i=0;i<4;i++){
+                ps[(i+offset)%4]=GPIO[i].T;
+            }
+            for(int i=0;i<4;i++){
+                GPIO[i].T=ps[i];
+            }
         }
         else if(Type==TYPE.AND){
             GPIO[(0+offset)%4].T=PINTYPE.OUTPUT;
@@ -87,6 +97,11 @@ public class Block : MonoBehaviour
             GPIO[(1+offset)%4].T=PINTYPE.INPUT;
             GPIO[(2+offset)%4].T=PINTYPE.NAN;
             GPIO[(3+offset)%4].T=PINTYPE.INPUT;
+        }
+        else if(Type==TYPE.SOCKET){
+            for(int i=0;i<4;i++){
+                GPIO[i].T=PINTYPE.PASSIVE;
+            }
         }
         UpdateState();
     }
@@ -119,13 +134,9 @@ public class Block : MonoBehaviour
                 p=Math.Max(p,GPIO[i].Power);
             }
             for(int i=0;i<4;i++){
-                GPIO[i].Power=p;
-            }
-            if(0<p){
-                ani.SetBool("ON",true);
-            }
-            else{
-                ani.SetBool("ON",false);
+                if(GPIO[i].T==PINTYPE.PASSIVE){
+                    GPIO[i].Power=p;
+                }
             }
         }
         else if(Type==TYPE.AND){
@@ -148,6 +159,18 @@ public class Block : MonoBehaviour
             }
             else{
                 GPIO[(0+offset)%4].Power=0;
+            }
+        }
+
+        if(Type!=TYPE.NONE){
+            string[] para={"N","E","S","W"};
+            for(int i=0;i<4;i++){
+                if(0<GPIO[(i+offset)%4].Power){
+                    ani.SetBool(para[i],true);
+                }
+                else{
+                    ani.SetBool(para[i],false);
+                }
             }
         }
 
