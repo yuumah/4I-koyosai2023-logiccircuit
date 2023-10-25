@@ -10,7 +10,7 @@ public class Socket : Block
     [SerializeField]
     private int selected=0;
     private int inneroffset=0;
-    void Start()
+    void Awake()
     {
         this.setOffset(0);
         this.Type=TYPE.SOCKET;
@@ -37,14 +37,13 @@ public class Socket : Block
     public void Turn(){
         inneroffset=(inneroffset+1)%4;
         if(SelectAble[selected]!=null){
-            Debug.Log("Turn:"+inneroffset.ToString());
             SelectAble[selected].transform.rotation=Quaternion.Euler(0,0,-90*inneroffset);
             blocks[selected].setOffset(inneroffset);
             blocks[selected].Init();
         }
     }
 
-    private void Update(){
+    public override void UpdateState(){
         if(SelectAble[selected]!=null){
             for(int i=0;i<4;i++){
                 if(blocks[selected].GPIO[i].T==PINTYPE.INPUT){
@@ -59,6 +58,16 @@ public class Socket : Block
                 }
             }
             blocks[selected].UpdateState();
+            
+        }
+        string[] para={"N","E","S","W"};
+        for(int i=0;i<4;i++){
+            if(0<GPIO[(i+offset)%4].Power){
+                ani.SetBool(para[i],true);
+            }
+            else{
+                ani.SetBool(para[i],false);
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ public class Block : MonoBehaviour
 {
     public const int MAX_POWER=128;
 
-    private Animator ani;
+    protected Animator ani;
     public enum PINTYPE{
         PASSIVE,
         INPUT,
@@ -52,16 +52,21 @@ public class Block : MonoBehaviour
         return this.Identity;
     }
     [SerializeField]
-    private int offset=0;
+    protected int offset=0;
     public void setOffset(int offset){
         this.offset=offset;
     }
 
-    public void Init()
+    void Awake()
     {
         if(Type!=TYPE.NONE){
             ani=this.GetComponent<Animator>();
         }
+    }
+
+    public void Init()
+    {
+        Awake();
         for(int i=0;i<4;i++){
             GPIO[i].Power=0;
         }
@@ -106,7 +111,7 @@ public class Block : MonoBehaviour
         UpdateState();
     }
 
-    public void UpdateState()
+    public virtual void UpdateState()
     {
         if(Type==TYPE.OR){
             if(

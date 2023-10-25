@@ -122,7 +122,6 @@ public class GameManager : MonoBehaviour
         if (!context.performed) return;
 
         Block b=Board[currentposint.y,currentposint.x].GetComponent<Block>();
-        Debug.Log(b.getType());
         if(b.getType()==Block.TYPE.SOCKET){
             Socket s=b.GetComponent<Socket>();
             s.Turn();
