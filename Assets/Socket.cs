@@ -16,7 +16,14 @@ public class Socket : Block
         this.Type=TYPE.SOCKET;
         blocks=new Block[SelectAble.Length];
         for(int i=0;i<SelectAble.Length;i++){
-            if(SelectAble[i]!=null)blocks[i]=SelectAble[i].GetComponent<Block>();
+            if(SelectAble[i]!=null){
+                blocks[i]=SelectAble[i].GetComponent<Block>();
+                SelectAble[i].SetActive(false);
+            }
+        }
+
+        if(SelectAble[0]!=null){
+            SelectAble[0].SetActive(true);
         }
     }
 
@@ -29,13 +36,12 @@ public class Socket : Block
 
         if(SelectAble[selected]!=null){
             SelectAble[selected].SetActive(true);
-            blocks[selected].setOffset(inneroffset);
-            blocks[selected].Init();
+            Turn(0);
         }
     }
 
-    public void Turn(){
-        inneroffset=(inneroffset+1)%4;
+    public void Turn(int step=1){
+        inneroffset=(inneroffset+step)%4;
         if(SelectAble[selected]!=null){
             SelectAble[selected].transform.rotation=Quaternion.Euler(0,0,-90*inneroffset);
             blocks[selected].setOffset(inneroffset);

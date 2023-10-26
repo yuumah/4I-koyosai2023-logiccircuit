@@ -201,7 +201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 396655166}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -351,12 +351,14 @@ MonoBehaviour:
   - {fileID: 8605047899031874913, guid: 89cca01a0e89ed741a4a0339f4358ec6, type: 3}
   - {fileID: 8228778006448181466, guid: 62636ec6d31f3d84b98b062d6b796489, type: 3}
   - {fileID: 1670266209762549343, guid: 445fa303bed3fac4e8d633336f66ae6b, type: 3}
+  - {fileID: 6128756670851095639, guid: b60d59a95c77e25458beb2313425c3b3, type: 3}
   FallBack: {fileID: 7881981592879961671, guid: 56ff29764a70e454789015626c5a2cd3, type: 3}
   currentposint: {x: 0, y: 0}
   Select: {fileID: 396655166}
   MainCam: {fileID: 519420031}
   _press: {fileID: -6374780797893820837, guid: f3a13e99fc7559f46b8d527586007b97, type: 3}
   _impact_move: {fileID: -5507105546309783091, guid: f3a13e99fc7559f46b8d527586007b97, type: 3}
+  _rotate: {fileID: 7201341602887463405, guid: f3a13e99fc7559f46b8d527586007b97, type: 3}
 --- !u!4 &706343719
 Transform:
   m_ObjectHideFlags: 0

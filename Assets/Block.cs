@@ -73,7 +73,7 @@ public class Block : MonoBehaviour
         if(Type==TYPE.OR){
             GPIO[(0+offset)%4].T=PINTYPE.OUTPUT;
             GPIO[(1+offset)%4].T=PINTYPE.INPUT;
-            GPIO[(2+offset)%4].T=PINTYPE.INPUT;
+            GPIO[(2+offset)%4].T=PINTYPE.NAN;
             GPIO[(3+offset)%4].T=PINTYPE.INPUT;
         }
         else if(Type==TYPE.NOT){
@@ -108,6 +108,12 @@ public class Block : MonoBehaviour
                 GPIO[i].T=PINTYPE.PASSIVE;
             }
         }
+        else if(Type==TYPE.SOURCE){
+            for(int i=0;i<4;i++){
+                GPIO[i].T=PINTYPE.OUTPUT;
+                GPIO[i].Power=MAX_POWER;
+            }
+        }
         UpdateState();
     }
 
@@ -116,7 +122,6 @@ public class Block : MonoBehaviour
         if(Type==TYPE.OR){
             if(
                 0<GPIO[(1+offset)%4].Power||
-                0<GPIO[(2+offset)%4].Power||
                 0<GPIO[(3+offset)%4].Power
             ){
                 GPIO[(0+offset)%4].Power=MAX_POWER;

@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public Camera MainCam;
 
     [SerializeField]
-    private InputActionReference _press,_impact_move;
+    private InputActionReference _press,_impact_move,_rotate;
 
 
     private Block findBlock(char Identity){
@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
         _press.action.Disable();
         _impact_move.action.performed-=Impact_move;
         _impact_move.action.Disable();
+        _rotate.action.performed-=RotateSocket;
+        _rotate.action.Disable();
         maininput.Dispose();
     }
     void Start()
@@ -49,7 +51,7 @@ public class GameManager : MonoBehaviour
         maininput=new MainInput();
         
         maininput.Enable();
-        String txtmap="#I#\nI1*I1";
+        String txtmap="#0#0#0I0#0#0#0\n#0#0L1*0L2#0#0\n#0#0S0S0S0#0#0";
         //String txtmap="L1I1I1L2L1I1T0L2L1L2#1T0T0I1L2\nI0#1I1T1#1L1L3L0L3L0L2#1I0#1I0\nT3I1L2L0L2T3L2#1T0L2I0L1L3I0I0\nL0#1I0#1I0I0L0L2I0L0L3L0L2L0T1\nL1I1L3I0I0T3#1N0L0L2L1L2T3L2#1\nN0L1L2T3L3#1L1L3#1L0L3I0#1L0L2\nI0I0L0L3L1L2I0#1T3T0#1L0L2L1T1\n#1L0I1I1L3L0L3L0L3L0I1I1T2L3#1";
         String[] map=txtmap.Split("\n");
         column=map.Length;
@@ -98,6 +100,8 @@ public class GameManager : MonoBehaviour
 
         _press.action.performed+=OnPress;
         _press.action.Enable();
+        _rotate.action.performed+=RotateSocket;
+        _rotate.action.Enable();
         _impact_move.action.performed+=Impact_move;
         _impact_move.action.Enable();
 
@@ -124,7 +128,16 @@ public class GameManager : MonoBehaviour
         Block b=Board[currentposint.y,currentposint.x].GetComponent<Block>();
         if(b.getType()==Block.TYPE.SOCKET){
             Socket s=b.GetComponent<Socket>();
-            s.Turn();
+            s.SwitchToNext();
+        }
+    }
+    public void RotateSocket(InputAction.CallbackContext context){
+        if(context.performed){
+            Block b=Board[currentposint.y,currentposint.x].GetComponent<Block>();
+            if(b.getType()==Block.TYPE.SOCKET){
+                Socket s=b.GetComponent<Socket>();
+                s.Turn();
+            }
         }
     }
     public void Impact_move(InputAction.CallbackContext context){
@@ -151,7 +164,7 @@ public class GameManager : MonoBehaviour
         }
         currentposint.x=(int)Math.Round(currentpos.x);
         currentposint.y=(int)Math.Round(currentpos.y);
-        Select.transform.position=new Vector3(currentposint.x,currentposint.y,0);
+        Select.transform.position=new Vector3(currentposint.x,currentposint.y,Select.transform.position.z);
     }
 
     public Vector2Int getCurrentPos(){
