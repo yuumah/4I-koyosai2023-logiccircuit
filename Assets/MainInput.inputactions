@@ -178,7 +178,7 @@
                 {
                     "name": "",
                     "id": "31e21f36-4547-440b-bb59-9bbe27494c9b",
-                    "path": "<Gamepad>/select",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -198,10 +198,54 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "Gamepad",
+                    "id": "c8c874f9-0ece-46b1-8e1c-fc08cf4aca92",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "d5620a16-9265-4afb-b4a4-51ed99e476c6",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "aec0dfcd-ad84-421f-a911-9297ab92d3c7",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "457426b9-76f6-4d49-abeb-683a53bfd44e",
                     "path": "<Keyboard>/escape",
                     "interactions": "Hold(duration=3)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ReStart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17b8aa03-bb76-40da-b0fe-de2dd7690b33",
+                    "path": "<Gamepad>/start",
+                    "interactions": "Hold(duration=2)",
                     "processors": "",
                     "groups": "",
                     "action": "ReStart",

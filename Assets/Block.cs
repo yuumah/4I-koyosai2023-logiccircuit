@@ -24,7 +24,8 @@ public class Block : MonoBehaviour
         SOURCE,
         XOR,
         SOCKET,
-        GOAL
+        GOAL,
+        CROSS
     }
 
     [System.Serializable]
@@ -116,10 +117,8 @@ public class Block : MonoBehaviour
             }
         }
         else if(Type==TYPE.SOURCE){
-            for(int i=0;i<4;i++){
-                GPIO[i].T=PINTYPE.OUTPUT;
-                GPIO[i].Power=MAX_POWER;
-            }
+            GPIO[(0+offset)%4].T=PINTYPE.OUTPUT;
+            GPIO[(0+offset)%4].Power=MAX_POWER;
         }
         else if(Type==TYPE.GOAL){
             for(int i=0;i<4;i++){
@@ -160,6 +159,14 @@ public class Block : MonoBehaviour
                     GPIO[i].Power=p;
                 }
             }
+        }
+        else if(Type==TYPE.CROSS){
+            int p1=Math.Max(GPIO[0].Power,GPIO[2].Power);
+            int p2=Math.Max(GPIO[1].Power,GPIO[3].Power);
+            GPIO[0].Power=p1;
+            GPIO[2].Power=p1;
+            GPIO[1].Power=p2;
+            GPIO[3].Power=p2;
         }
         else if(Type==TYPE.AND){
             if(

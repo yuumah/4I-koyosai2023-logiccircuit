@@ -354,6 +354,7 @@ MonoBehaviour:
   - {fileID: 1670266209762549343, guid: 445fa303bed3fac4e8d633336f66ae6b, type: 3}
   - {fileID: 6128756670851095639, guid: b60d59a95c77e25458beb2313425c3b3, type: 3}
   - {fileID: 8062185134300633432, guid: ca03a7cd8329c374a82e4513024274f3, type: 3}
+  - {fileID: 5154059111017279442, guid: 4922ea461e87b5049aaf96c370f9fffc, type: 3}
   FallBack: {fileID: 7881981592879961671, guid: 56ff29764a70e454789015626c5a2cd3, type: 3}
   currentposint: {x: 0, y: 0}
   Select: {fileID: 396655166}
@@ -501,7 +502,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 78.56}
   m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1476521532
@@ -525,6 +526,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'Puzzle Clear
+
+
+    go to next room
 
 
     <size=20>Press ESC to Restart</size>'
