@@ -1,6 +1,6 @@
 import random
 
-size=(8,15)
+size=(15,15)
 
 class Block:
     W=[False,False,False,False]
@@ -58,4 +58,4 @@ while 0<len(stack):
 for i in range(size[0]-1,-1,-1):
     for j in range(size[1]):
         print(Board[i][j].getChar(),end="")
-    print("\\n",end="")
+    print("\n",end="")

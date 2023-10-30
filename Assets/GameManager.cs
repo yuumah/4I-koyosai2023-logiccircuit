@@ -1,7 +1,10 @@
 using System;
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,7 +27,10 @@ public class GameManager : MonoBehaviour
     public Camera MainCam;
 
     [SerializeField]
-    private InputActionReference _press,_impact_move,_rotate;
+    private InputActionReference _press,_impact_move,_rotate,_hold;
+
+    private bool isGoal=false;
+    private List<string> mapsPath=new List<string>();
 
 
     private Block findBlock(char Identity){
@@ -38,6 +44,8 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
+        _hold.action.performed-=ForceReset;
+        _hold.action.Disable();
         _press.action.performed-=OnPress;
         _press.action.Disable();
         _impact_move.action.performed-=Impact_move;
@@ -48,20 +56,24 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        Cursor.visible=false;
+        Getfiles();
         maininput=new MainInput();
         
         maininput.Enable();
-        String txtmap="#0#0#0I0#0#0#0\n#0#0L1*0L2#0#0\n#0#0S0S0S0#0#0";
+        String txtmap=ReadText(mapsPath[0]);
+        //String txtmap="#0#0#0G0#0#0#0\n#0#0#0I0#0#0#0\n#0#0L1*0L2#0#0\n#0#0S0S0S0#0#0";
         //String txtmap="L1I1I1L2L1I1T0L2L1L2#1T0T0I1L2\nI0#1I1T1#1L1L3L0L3L0L2#1I0#1I0\nT3I1L2L0L2T3L2#1T0L2I0L1L3I0I0\nL0#1I0#1I0I0L0L2I0L0L3L0L2L0T1\nL1I1L3I0I0T3#1N0L0L2L1L2T3L2#1\nN0L1L2T3L3#1L1L3#1L0L3I0#1L0L2\nI0I0L0L3L1L2I0#1T3T0#1L0L2L1T1\n#1L0I1I1L3L0L3L0L3L0I1I1T2L3#1";
         String[] map=txtmap.Split("\n");
         column=map.Length;
         for(int i=0;i<column;i++){
             int row=0;
             for(int j=0;j<map[i].Length;j++){
-                if(map[i][j]<'0'||'3'<map[i][j]){
+                if((map[i][j]<'0'||'3'<map[i][j])&&('!'<=map[i][j]&&map[i][j]<='~')){
                     row++;
                 }
             }
+            Debug.Log(row);
             if(maxrow<row){
                 maxrow=row;
             }
@@ -104,24 +116,37 @@ public class GameManager : MonoBehaviour
         _rotate.action.Enable();
         _impact_move.action.performed+=Impact_move;
         _impact_move.action.Enable();
+        _hold.action.performed+=ForceReset;
+        _hold.action.Enable();
+
 
     }
     void Update()
     {
-        Vector2 vec=maininput.Player.Move.ReadValue<Vector2>();
-        float size=vec.x*vec.x+vec.y*vec.y;
-        if(0<size){
-            Move(vec,Time.deltaTime*4);
+        if(!isGoal){
+            Vector2 vec=maininput.Player.Move.ReadValue<Vector2>();
+            float size=vec.x*vec.x+vec.y*vec.y;
+            if(0<size){
+                Move(vec,Time.deltaTime*4);
+            }
+            else{
+                currentpos=currentposint;
+            }
+
+            UpdateCircuit();
         }
         else{
-            currentpos=currentposint;
+            if(0<maininput.Player.ReStart.ReadValue<float>()){
+                SceneManager.LoadScene("MainGame");
+            }
         }
-
-        UpdateCircuit();
     }
 
     public void OnPress(InputAction.CallbackContext context)
     {
+        if(isGoal){
+            return;
+        }
         // 押された瞬間でPerformedとなる
         if (!context.performed) return;
 
@@ -132,6 +157,7 @@ public class GameManager : MonoBehaviour
         }
     }
     public void RotateSocket(InputAction.CallbackContext context){
+        if(isGoal)return;
         if(context.performed){
             Block b=Board[currentposint.y,currentposint.x].GetComponent<Block>();
             if(b.getType()==Block.TYPE.SOCKET){
@@ -141,9 +167,14 @@ public class GameManager : MonoBehaviour
         }
     }
     public void Impact_move(InputAction.CallbackContext context){
+        if(isGoal)return;
         if(context.performed){
             Move(maininput.Player.Move.ReadValue<Vector2>(),0.5f);
         }
+    }
+
+    public void ForceReset(InputAction.CallbackContext context){
+        SceneManager.LoadScene("MainGame");
     }
 
 
@@ -204,5 +235,32 @@ public class GameManager : MonoBehaviour
                 b.UpdateState();
             }
         }
+    }
+
+    public void Goal(){
+        isGoal=true;
+        this.GetComponent<Animator>().SetBool("Clear",true);
+    }
+
+
+    private void Getfiles(){
+        String folderpath="maps";
+        string[] fs =Directory.GetFiles (folderpath,"*",SearchOption.TopDirectoryOnly);
+        for(int i=0;i<fs.Length;i++){
+            if(Path.GetExtension(fs[i])==".txt"){
+                mapsPath.Add(fs[i]);
+            }
+        }
+        for(int i=0;i<mapsPath.Count;i++){
+            Debug.Log(mapsPath[i]);
+            Debug.Log(ReadText(mapsPath[i]));
+        }
+    }
+    private static string ReadText(string iPath)
+    {
+        using var fs = new FileStream(iPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new StreamReader(fs, Encoding.UTF8);
+        string textContent = reader.ReadToEnd();
+        return textContent;
     }
 }

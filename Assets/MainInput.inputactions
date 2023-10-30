@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ReStart",
+                    "type": "Button",
+                    "id": "9400dd22-6253-4b9e-a479-9dd628925a8d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -185,6 +194,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "457426b9-76f6-4d49-abeb-683a53bfd44e",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "Hold(duration=3)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ReStart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

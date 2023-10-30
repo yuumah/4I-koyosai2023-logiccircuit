@@ -5,6 +5,9 @@ public class Block : MonoBehaviour
 {
     public const int MAX_POWER=128;
 
+    private const int GoalCount=512;
+    private int goalcount=0;
+
     protected Animator ani;
     public enum PINTYPE{
         PASSIVE,
@@ -20,7 +23,8 @@ public class Block : MonoBehaviour
         NOT,
         SOURCE,
         XOR,
-        SOCKET
+        SOCKET,
+        GOAL
     }
 
     [System.Serializable]
@@ -57,8 +61,11 @@ public class Block : MonoBehaviour
         this.offset=offset;
     }
 
+    private GameManager gameManager;
+
     void Awake()
     {
+        gameManager=GameObject.Find("GameManager").GetComponent<GameManager>();
         if(Type!=TYPE.NONE){
             ani=this.GetComponent<Animator>();
         }
@@ -114,7 +121,12 @@ public class Block : MonoBehaviour
                 GPIO[i].Power=MAX_POWER;
             }
         }
-        UpdateState();
+        else if(Type==TYPE.GOAL){
+            for(int i=0;i<4;i++){
+                GPIO[i].T=PINTYPE.INPUT;
+            }
+        }
+        //UpdateState();
     }
 
     public virtual void UpdateState()
@@ -169,6 +181,22 @@ public class Block : MonoBehaviour
             }
             else{
                 GPIO[(0+offset)%4].Power=0;
+            }
+        }
+        else if(Type==TYPE.GOAL){
+            int p=0;
+            for(int i=0;i<4;i++){
+                p+=GPIO[i].Power;
+            }
+            if(0<p){
+                goalcount++;
+                if(GoalCount<goalcount){
+                    Debug.Log("Goal");
+                    gameManager.Goal();
+                }
+            }
+            else{
+                goalcount=0;
             }
         }
 
