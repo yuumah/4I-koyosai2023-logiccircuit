@@ -254,11 +254,9 @@ MonoBehaviour:
     T: 0
   offset: 0
   SelectAble:
-  - {fileID: 0}
   - {fileID: 1976530655398704715}
   - {fileID: 8612521660737108818}
   - {fileID: 6460836310841311283}
-  selected: 0
 --- !u!1 &4444620840720389714
 GameObject:
   m_ObjectHideFlags: 0

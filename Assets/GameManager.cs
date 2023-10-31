@@ -69,11 +69,10 @@ public class GameManager : MonoBehaviour
         for(int i=0;i<column;i++){
             int row=0;
             for(int j=0;j<map[i].Length;j++){
-                if((map[i][j]<'0'||'3'<map[i][j])&&('!'<=map[i][j]&&map[i][j]<='~')){
+                if((map[i][j]<'0'||'9'<map[i][j])&&('!'<=map[i][j]&&map[i][j]<='~')){
                     row++;
                 }
             }
-            Debug.Log(row);
             if(maxrow<row){
                 maxrow=row;
             }
@@ -90,11 +89,14 @@ public class GameManager : MonoBehaviour
                 int r=0;
                 if(j+offset<map[column-i-1].Length){
                     id=map[column-i-1][j+offset];
-                    if(j+offset+1<map[column-i-1].Length){
+                    while(j+offset+1<map[column-i-1].Length){
                         char c=map[column-i-1][j+offset+1];
-                        if('0'<=c&&c<='3'){
-                            r=c-'0';
+                        if('0'<=c&&c<='9'){
+                            r+=c-'0';
                             offset++;
+                        }
+                        else{
+                            break;
                         }
                     }
                 }

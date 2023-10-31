@@ -58,7 +58,7 @@ public class Block : MonoBehaviour
     }
     [SerializeField]
     protected int offset=0;
-    public void setOffset(int offset){
+    public virtual void setOffset(int offset){
         this.offset=offset;
     }
 

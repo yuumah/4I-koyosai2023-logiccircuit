@@ -7,12 +7,10 @@ public class Socket : Block
     [SerializeField]
     private GameObject[] SelectAble;
     private Block[] blocks;
-    [SerializeField]
     private int selected=0;
     private int inneroffset=0;
     void Awake()
     {
-        this.setOffset(0);
         this.Type=TYPE.SOCKET;
         blocks=new Block[SelectAble.Length];
         for(int i=0;i<SelectAble.Length;i++){
@@ -21,19 +19,16 @@ public class Socket : Block
                 SelectAble[i].SetActive(false);
             }
         }
-
-        if(SelectAble[0]!=null){
-            SelectAble[0].SetActive(true);
-        }
     }
 
     public void SwitchToNext(){
+        setSelect(this.selected+1);
+    }
+    private void setSelect(int select){
         if(SelectAble[selected]!=null){
             SelectAble[selected].SetActive(false);
         }
-
-        selected=(selected+1)%SelectAble.Length;
-
+        selected=select%SelectAble.Length;
         if(SelectAble[selected]!=null){
             SelectAble[selected].SetActive(true);
             Turn(0);
@@ -47,6 +42,12 @@ public class Socket : Block
             blocks[selected].setOffset(inneroffset);
             blocks[selected].Init();
         }
+    }
+
+    public override void setOffset(int offset)
+    {
+        setSelect(offset/4);
+        Turn(offset%4);
     }
 
     public override void UpdateState(){
