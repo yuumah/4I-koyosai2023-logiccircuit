@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
                     while(j+offset+1<map[column-i-1].Length){
                         char c=map[column-i-1][j+offset+1];
                         if('0'<=c&&c<='9'){
-                            r+=c-'0';
+                            r=10*r+c-'0';
                             offset++;
                         }
                         else{
