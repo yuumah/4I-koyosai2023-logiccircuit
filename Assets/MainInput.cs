@@ -188,6 +188,17 @@ public partial class @MainInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""e103901b-d7e0-4bbf-b5bd-a21686b4b707"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""f9f9e6c6-52bb-4727-87dd-9233c4031a42"",
                     ""path"": ""<Keyboard>/enter"",
                     ""interactions"": """",

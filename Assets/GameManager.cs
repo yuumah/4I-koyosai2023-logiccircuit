@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
         maininput=new MainInput();
         
         maininput.Enable();
-        String txtmap=ReadText(mapsPath[0]);
+        String txtmap=ReadText(mapsPath[UnityEngine.Random.Range(0,mapsPath.Count)]);
         //String txtmap="#0#0#0G0#0#0#0\n#0#0#0I0#0#0#0\n#0#0L1*0L2#0#0\n#0#0S0S0S0#0#0";
         //String txtmap="L1I1I1L2L1I1T0L2L1L2#1T0T0I1L2\nI0#1I1T1#1L1L3L0L3L0L2#1I0#1I0\nT3I1L2L0L2T3L2#1T0L2I0L1L3I0I0\nL0#1I0#1I0I0L0L2I0L0L3L0L2L0T1\nL1I1L3I0I0T3#1N0L0L2L1L2T3L2#1\nN0L1L2T3L3#1L1L3#1L0L3I0#1L0L2\nI0I0L0L3L1L2I0#1T3T0#1L0L2L1T1\n#1L0I1I1L3L0L3L0L3L0I1I1T2L3#1";
         String[] map=txtmap.Split("\n");

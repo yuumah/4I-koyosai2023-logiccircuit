@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    public const int MAX_POWER=128;
+    public const int MAX_POWER=16;
 
-    private const int GoalCount=512;
+    private const int GoalCount=64;
     private int goalcount=0;
 
     protected Animator ani;
@@ -117,13 +117,17 @@ public class Block : MonoBehaviour
             }
         }
         else if(Type==TYPE.SOURCE){
+            for(int i=0;i<4;i++){
+                GPIO[i].T=PINTYPE.NAN;
+            }
             GPIO[(0+offset)%4].T=PINTYPE.OUTPUT;
             GPIO[(0+offset)%4].Power=MAX_POWER;
         }
         else if(Type==TYPE.GOAL){
             for(int i=0;i<4;i++){
-                GPIO[i].T=PINTYPE.INPUT;
+                GPIO[i].T=PINTYPE.NAN;
             }
+            GPIO[(2+offset)%4].T=PINTYPE.INPUT;
         }
         //UpdateState();
     }
@@ -191,10 +195,7 @@ public class Block : MonoBehaviour
             }
         }
         else if(Type==TYPE.GOAL){
-            int p=0;
-            for(int i=0;i<4;i++){
-                p+=GPIO[i].Power;
-            }
+            int p=GPIO[(2+offset)%4].Power;
             if(0<p){
                 goalcount++;
                 if(GoalCount<goalcount){
